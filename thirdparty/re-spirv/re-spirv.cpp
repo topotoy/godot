@@ -1858,7 +1858,9 @@ namespace respv {
             SpvOp opCode = SpvOp(dataWords[wordIndex] & 0xFFFFU);
             uint32_t wordCount = (dataWords[wordIndex] >> 16U) & 0xFFFFU;
             if (!SpvIsSupported(opCode)) {
+#if RESPV_VERBOSE_ERRORS
                 fprintf(stderr, "%s is not supported yet.\n", SpvOpToString(opCode));
+#endif
                 return false;
             }
 
