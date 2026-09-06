@@ -604,9 +604,13 @@ Error RenderingShaderContainer::reflect_spirv(const String &p_shader_name, Span<
 						if (!refvar) {
 							continue;
 						}
-						if (refvar->built_in != SpvBuiltInFragDepth) {
-							reflection.fragment_output_mask |= 1 << refvar->location;
+						// Built-ins such as FragDepth and SampleMask do not occupy
+						// framebuffer color attachments and have no Location.
+						if (refvar->decoration_flags & SPV_REFLECT_DECORATION_BUILT_IN) {
+							continue;
 						}
+						ERR_FAIL_COND_V_MSG(refvar->location >= 32, FAILED, "Fragment color output location exceeds the output mask capacity.");
+						reflection.fragment_output_mask |= 1u << refvar->location;
 					}
 				}
 			}

@@ -10,8 +10,16 @@ smallest engine changes needed by Topotoy's ReSTIRKit integration.
    records that value. Release builds intentionally store `UINT32_MAX`, so the
    same check would reject every indexed bottom-level acceleration structure.
 
-Topotoy's effective engine changes are consolidated into one commit above the
-official source revision so the maintained delta is easy to audit and rebase.
+Topotoy's effective engine changes retain their authored commits above the
+pinned official source revision. CoreKit verifies that ancestry and the exact
+engine commit without rewriting existing local history.
+
+2. **Fragment built-in reflection**
+   Excludes all SPIR-V built-in outputs from the framebuffer color attachment
+   mask, including `SampleMask`. Previously only `FragDepth` was excluded;
+   `gl_SampleMask` acquired a bogus bit 31 and prevented valid MSAA foliage
+   pipelines from being created. User color locations are range-checked before
+   shifting the unsigned output mask.
 
 ## Distribution
 
